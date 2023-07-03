@@ -1,33 +1,44 @@
 from datetime import datetime, timedelta
 
+
 def get_birthdays_per_week(users):
     # Отримуємо поточну дату
-    today = datetime.now().date()
+    current_date = datetime.now().date()
 
-    # Визначаємо початок і кінець тижня
-    start_of_week = today - timedelta(days=today.weekday())
-    end_of_week = start_of_week + timedelta(days=6)
+    # Визначаємо перший день наступного тижня
+    next_week_start = current_date + timedelta(days=(7 - current_date.weekday()))
 
-    # Створюємо словник для зберігання користувачів по днях тижня
-    birthdays_per_week = {
-        "Monday": [],
-        "Tuesday": [],
-        "Wednesday": [],
-        "Thursday": [],
-        "Friday": [],
-        "Saturday": [],
-        "Sunday": []
-    }
+    # Створюємо словник, щоб згрупувати користувачів по днях народження
+    birthdays = {}
 
-    # Проходимося по користувачам і додаємо їх до відповідних днів тижня
+    # Перебираємо користувачів і зберігаємо їх у відповідний день
     for user in users:
-        birthday = user["birthday"].date()
-        if start_of_week <= birthday <= end_of_week:
-            # Визначаємо день тижня для дня народження
-            birthday_weekday = birthday.strftime("%A")
-            birthdays_per_week[birthday_weekday].append(user["name"])
+        birthday = user['birthday'].date()
 
-    # Виводимо іменинників по днях тижня
-    for weekday, names in birthdays_per_week.items():
-        if names:
-            print(f"{weekday}: {', '.join(names)}")
+        # Визначаємо день привітання для користувача
+        if birthday.weekday() >= 5:  # Якщо день народження вихідний
+            greeting_day = next_week_start
+        else:
+            greeting_day = birthday
+
+        # Додаємо користувача до списку привітань
+        if greeting_day in birthdays:
+            birthdays[greeting_day].append(user['name'])
+        else:
+            birthdays[greeting_day] = [user['name']]
+
+    # Виводимо список привітань у форматі "День: Користувачі"
+    for day, users in birthdays.items():
+        day_name = day.strftime("%A")
+        user_list = ', '.join(users)
+        print(f"{day_name}: {user_list}")
+
+
+users = [
+    {'name': 'Bill', 'birthday': datetime(2023, 7, 3)},
+    {'name': 'Jill', 'birthday': datetime(2023, 7, 5)},
+    {'name': 'Kim', 'birthday': datetime(2023, 7, 8)},
+    {'name': 'Jan', 'birthday': datetime(2023, 7, 9)}
+]
+
+get_birthdays_per_week(users)
