@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 
-
 def get_birthdays_per_week(users):
     # Отримуємо поточну дату
     current_date = datetime.now().date()
@@ -13,7 +12,8 @@ def get_birthdays_per_week(users):
 
     # Перебираємо користувачів і зберігаємо їх у відповідний день
     for user in users:
-        birthday = user['birthday'].date()
+        # Отримуємо день народження поточного року
+        birthday = user['birthday'].replace(year=current_date.year).date()
 
         # Визначаємо день привітання для користувача
         if birthday.weekday() >= 5:  # Якщо день народження вихідний
@@ -35,10 +35,10 @@ def get_birthdays_per_week(users):
 
 
 users = [
-    {'name': 'Bill', 'birthday': datetime(2023, 7, 3)},
-    {'name': 'Jill', 'birthday': datetime(2023, 7, 5)},
-    {'name': 'Kim', 'birthday': datetime(2023, 7, 8)},
-    {'name': 'Jan', 'birthday': datetime(2023, 7, 9)}
+    {'name': 'Bill', 'birthday': datetime(1990, 7, 3)},
+    {'name': 'Jill', 'birthday': datetime(1985, 7, 5)},
+    {'name': 'Kim', 'birthday': datetime(1998, 7, 8)},
+    {'name': 'Jan', 'birthday': datetime(2000, 7, 9)}
 ]
 
 get_birthdays_per_week(users)
